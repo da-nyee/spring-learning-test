@@ -10,14 +10,16 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/media-type")
+@RequestMapping("/media-type/users")
 public class MediaTypeController {
 
+    @PostMapping(consumes = "application/json")
     public ResponseEntity createUser(@RequestBody User user) {
         Long id = 1L;
         return ResponseEntity.created(URI.create("/users/" + id)).build();
     }
 
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<User>> showUser() {
         List<User> users = Arrays.asList(
                 new User("이름", "email"),
@@ -26,6 +28,7 @@ public class MediaTypeController {
         return ResponseEntity.ok().body(users);
     }
 
+    @GetMapping(produces = "text/html")
     public String userPage() {
         return "user page";
     }
