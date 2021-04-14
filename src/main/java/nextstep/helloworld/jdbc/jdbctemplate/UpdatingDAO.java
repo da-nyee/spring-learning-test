@@ -27,13 +27,14 @@ public class UpdatingDAO {
      */
     public void insert(Customer customer) {
         String sql = "insert into customers (first_name, last_name) values (?, ?)";
+        jdbcTemplate.update(sql, customer.getFirstName(), customer.getLastName());
     }
     /**
      * public int update(String sql, @Nullable Object... args)
      */
     public int delete(Long id) {
         String sql = "delete from customers where id = ?";
-        return 0;
+        return jdbcTemplate.update(sql, id);
     }
 
     /**
@@ -41,6 +42,6 @@ public class UpdatingDAO {
      */
     public Long insertWithKeyHolder(Customer customer) {
         final String sql = "insert into customers (first_name, last_name) values (?, ?)";
-        return null;
+        return Long.valueOf(jdbcTemplate.update(sql, customer.getFirstName(), customer.getLastName()));
     }
 }
