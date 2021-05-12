@@ -8,15 +8,16 @@ import nextstep.helloworld.dto.TokenResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @RestController
 public class AuthController {
     private static final String SESSION_KEY = "USER";
-    private AuthService authService;
-
+    private final AuthService authService;
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -32,17 +33,13 @@ public class AuthController {
      * email=email@email.com&password=1234
      */
     @PostMapping("/login/session")
-    public ResponseEntity sessionLogin() {
-        // TODO: email과 password 값 추출하기
-        String email = "";
-        String password = "";
-
+    public ResponseEntity<Void> sessionLogin(@RequestParam(value = "email") String email,
+                                             @RequestParam(value = "password") String password,
+                                             HttpSession httpSession) {
         if (authService.checkInvalidLogin(email, password)) {
             throw new AuthorizationException();
         }
-
-        // TODO: Session에 인증 정보 저장 (key: SESSION_KEY, value: email값)
-
+        httpSession.setAttribute(SESSION_KEY, email);
         return ResponseEntity.ok().build();
     }
 
@@ -54,9 +51,8 @@ public class AuthController {
      * accept: application/json
      */
     @GetMapping("/members/me")
-    public ResponseEntity findMyInfo() {
-        // TODO: Session을 통해 인증 정보 조회하기 (key: SESSION_KEY)
-        String email = "";
+    public ResponseEntity<MemberResponse> findMyInfo(HttpSession httpSession) {
+        String email = (String) httpSession.getAttribute(SESSION_KEY);
         MemberResponse member = authService.findMember(email);
         return ResponseEntity.ok().body(member);
     }
