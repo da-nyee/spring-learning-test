@@ -1,5 +1,6 @@
 package nextstep.helloworld.mvcconfig.config;
 
+import nextstep.helloworld.mvcconfig.ui.AuthenticationPrincipalArgumentResolver;
 import nextstep.helloworld.mvcconfig.ui.LoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -36,7 +37,9 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      *
      * AuthenticationPrincipalArgumentResolver 등록하기
      */
+
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new AuthenticationPrincipalArgumentResolver());
     }
 }
